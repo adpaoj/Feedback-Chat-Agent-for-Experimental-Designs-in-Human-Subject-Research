@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
+import utils
 
 app = Flask(__name__)
 
@@ -26,13 +27,28 @@ def index():
     if request.method == "POST":
         user_input = request.form.get("user_input")
 
+        # Falsches Thema abfangen
+        if utils.DetectDiffTopic(user_input):
+            output = "Bitte nur zum richtigen Thema fragen."
+            return render_template("index.html", output=output)
+
+        # Sprache erkennen
+        lang = utils.DetectLanguage(user_input)
+
+        # Modell nach Sprache wählen
+        MODEL = utils.ChooseModel(lang)
+
+        # Prompt erstellen
+        prompt = utils.CraftPrompt(user_input, lang)
+
         # Anfrage an die AI
         chat_completion = client.chat.completions.create(
             model=MODEL,
-            messages=[{"role": "user", "content": user_input}]
+            messages=[{"role": "user", "content": prompt}]
         )
 
-        output = chat_completion.choices[0].message["content"]
+        # output = chat_completion.choices[0].message["content"]
+        output = chat_completion.choices[0].message.content
 
     return render_template("index.html", output=output)
 

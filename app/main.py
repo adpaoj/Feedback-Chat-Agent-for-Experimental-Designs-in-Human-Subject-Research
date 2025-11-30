@@ -63,6 +63,7 @@ def index():
 
         # Sprache erkennen
         lang = utils.DetectLanguage(user_input)
+        if lang == -1: return render_template("index.html", output="Bitte in Deutsch oder Englisch schreiben.") 
 
         # Modell nach Sprache wählen
         MODEL = utils.ChooseModel(lang)

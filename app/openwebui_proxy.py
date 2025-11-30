@@ -49,14 +49,22 @@ def chat_completions_nonstream():
     messages = req.get("messages") or []
     user_input = messages[-1]["content"] if messages else ""
 
+    # erstmal auf falsches Theme prüfen
     if utils.DetectDiffTopic(user_input):
         out_text = "Bitte nur zum richtigen Thema fragen."
-        content_blocks = [{"type": "text", "text": out_text}]
     else:
+
+        # Sprache erkennen - falls nicht de/en Fehler
         lang = utils.DetectLanguage(user_input)
+        if lang == -1: return return_error_to_ui("Bitte in Deutsch oder Englisch schreiben.")
+
+        # bestes Modell nach Sprache wählen
         model = utils.ChooseModel(lang)
+
+        # Prompt nach Sprache bauen
         prompt = utils.CraftPrompt(user_input, lang)
 
+        # Anfrage an die AI
         completion = client.chat.completions.create(
             model=model,
             messages=[{"role": "user", "content": prompt}]
@@ -77,7 +85,6 @@ def chat_completions_nonstream():
         if assistant_msg:
             assistant_msg_id = assistant_msg["id"]
         else:
-            logging.error("no assisteent message id...")
             assistant_msg_id = str(uuid.uuid4())
             assistant_msg = {
                 "id": assistant_msg_id,
@@ -138,4 +145,20 @@ def models():
             "name": "My-Chat-AI",
             "type": "chat"
         }]
+    })
+
+def return_error_to_ui(message: str):
+    return jsonify({
+        "id": str(uuid.uuid4()),
+        "object": "chat.completion",
+        "choices": [
+            {
+                "index": 0,
+                "message": {
+                    "role": "assistant",
+                    "content": message
+                },
+                "finish_reason": "stop"
+            }
+        ]
     })

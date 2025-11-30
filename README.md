@@ -23,4 +23,4 @@ läuft soweit und gibt die Antwort auf
 nicht mit Streaming - kann man noch implementieren (unter openwebui_proxy copy.py ist eine Methode, von der aus man weiter probieren kann)
 
 
-evtl fehlt noch "pip install flask-cors" in requirements
+evtl fehlt noch "pip install flask-cors" und "pip install langdetect" in requirements

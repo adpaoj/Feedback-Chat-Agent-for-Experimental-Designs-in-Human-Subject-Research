@@ -1,0 +1,219 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+    background-color: #00876C !important;
+}
+
+/* Chat messages styling */
+.chat-message {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+}
+
+.chat-message.user {
+    align-items: flex-end;
+}
+
+.chat-message.assistant {
+    align-items: flex-start;
+}
+
+.message-content {
+    padding: 1rem;
+    border-radius: 1rem;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.chat-message.user .message-content {
+    background-color: #ffffff;
+    color: #212529;
+    border: 2px solid #009682;
+    border-bottom-right-radius: 0.25rem;
+}
+
+.chat-message.assistant .message-content {
+    background-color: #4664AA;
+    color: white;
+    border-bottom-left-radius: 0.25rem;
+}
+
+/* Markdown content styling within messages */
+.message-content pre {
+    background-color: rgba(0,0,0,0.1);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.chat-message.user .message-content pre {
+    background-color: rgba(0,0,0,0.05);
+    color: inherit;
+}
+
+.chat-message.assistant .message-content pre {
+    background-color: rgba(255,255,255,0.1);
+    color: #fff;
+}
+
+.message-content code {
+    background-color: rgba(0,0,0,0.1);
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+}
+
+.chat-message.user .message-content code {
+    background-color: rgba(0,0,0,0.05);
+    color: inherit;
+}
+
+.chat-message.assistant .message-content code {
+    background-color: rgba(255,255,255,0.2);
+    color: #fff;
+}
+
+/* Chat box responsiveness */
+.chat-box {
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow-y: auto;
+}
+
+.chat-message .timestamp {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 5px;
+    align-self: flex-end;
+}
+
+/* Add hover effect to conversation list */
+.list-group-item:hover {
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+/* integraton page*/
+.embed-preview {
+    background-color: #f9f9f9;
+}
+pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+
+.tooltip-icon {
+    cursor: pointer;
+    margin-left: 5px;
+    font-size: 0.9em;
+    color: #007bff; /* Bootstrap primary color */
+}
+.tooltip-icon:hover {
+    color: #0056b3; /* Darker shade for hover */
+    text-decoration: underline;
+}
+
+.kit-green {
+    background-color: #00876C !important;
+    color: white !important;
+}
+
+.kit-blue {
+    background-color: #4664AA !important;
+    color: white !important;
+}
+
+/* KIT Button Overrides */
+.btn-primary {
+    background-color: #00876C;
+    border-color: #00876C;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+    background-color: #006d57 !important;
+    border-color: #006d57 !important;
+}
+
+.btn-outline-primary {
+    color: #00876C;
+    border-color: #00876C;
+}
+
+.btn-outline-primary:hover {
+    background-color: #00876C;
+    color: white;
+}
+
+/* Modern UI Enhancements */
+.card {
+    border-radius: 0.75rem;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.form-control {
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.form-control:focus {
+    border-color: #00876C;
+    box-shadow: 0 0 0 0.25rem rgba(0, 135, 108, 0.25);
+}
+
+.chat-box {
+    border: none;
+    background-color: #f8f9fa;
+}
+
+/* Choices.js Customization */
+.choices {
+    position: relative;
+    z-index: 100; /* Ensure container is above active list items */
+    margin-bottom: 0;
+}
+
+.choices__list--dropdown, .choices__list[aria-expanded] {
+    z-index: 1050; /* Ensure dropdown is above other elements */
+}
+
+.choices__list--dropdown .choices__list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.choices__inner {
+    border-radius: 0.5rem;
+    background-color: #fff;
+    min-height: auto;
+    padding: 0.25rem 0.5rem;
+}
+
+.choices[data-type*="select-one"] .choices__inner {
+    padding-bottom: 0.25rem;
+}
+
+/* Active conversation item styling */
+.list-group-item.active {
+    background-color: #e6f2ef !important;
+    color: #00876C !important;
+    border-color: #e6f2ef !important;
+}
+
+.list-group-item.active .text-muted {
+    color: #006d57 !important; /* Slightly darker for readability */
+}
+
+.list-group-item.active .bi-chat-left-text {
+    color: #00876C !important;
+}
+
+

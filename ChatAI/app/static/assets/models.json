@@ -1,0 +1,52 @@
+[
+    {
+        "name": "meta-llama-3.1-70b-instruct",
+        "display_name": "Meta LLaMA 3.1 70B Instruct",
+        "image_capable": false
+    },
+    {
+        "name": "meta-llama-3.1-8b-instruct",
+        "display_name": "Meta LLaMA 3.1 8B Instruct",
+        "image_capable": false
+    },
+    {
+        "name": "llama-3.1-sauerkrautlm-70b-instruct",
+        "display_name": "LLaMA 3.1 SauerkrautLM 70B Instruct",
+        "image_capable": false
+    },
+    {
+        "name": "llama-3.1-nemotron-70b-instruct",
+        "display_name": "LLaMA 3.1 Nemotron 70B Instruct",
+        "image_capable": false
+    },
+    {
+        "name": "codestral-22b",
+        "display_name": "Codestral 22B",
+        "image_capable": false
+    },
+    {
+        "name": "mistral-large-instruct",
+        "display_name": "Mistral Large Instruct",
+        "image_capable": false
+    },
+    {
+        "name": "qwen-2.5-72b-instruct",
+        "display_name": "Qwen 2.5 72B Instruct",
+        "image_capable": false
+    },
+    {
+        "name": "qwen-2-vl-72b-instruct",
+        "display_name": "Qwen 2 VL 72B Instruct",
+        "image_capable": true
+    },
+    {
+        "name": "internvl2-8b",
+        "display_name": "InternVL2 8B (Text & Image)",
+        "image_capable": true
+    },
+    {
+        "name": "e5-mistral-7b-instruct",
+        "display_name": "E5 Mistral 7B Instruct",
+        "image_capable": false
+    }
+]

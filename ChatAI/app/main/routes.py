@@ -9,6 +9,7 @@ from app.main import bp
 from app.services.conversation_service import ConversationService
 from app.services.chat_service import ChatService, ModelAPIError
 import logging
+from app.utils import logic_methods as utils
 
 
 logger = logging.getLogger(__name__)
@@ -199,6 +200,28 @@ def chat_stream():
         if not user_message and not base64_image:
             return jsonify({'error': 'Message or image is required'}), 400
 
+
+        # || Eigene Backend Logik ;) ||
+
+        # 1) Art der Anfrage bestimmen
+        req = utils.DetectDiffTopic(user_message)
+        if req == 0:
+            #return jsonify({'error': 'Bitte nur zum richtigen Thema fragen.'}), 400
+            return jsonify({'error': True, 'message': 'Bitte nur zum richtigen Thema fragen.'}), 400
+
+        # 2) Sprache erkennen
+        lang = utils.DetectLanguage(user_message)
+        if lang == -1:
+            # return jsonify({'error': 'Bitte in Deutsch oder Englisch schreiben.'}), 400
+            return jsonify({'error': True, 'message': 'Bitte in Deutsch oder Englisch schreiben.'}), 400
+
+        # 3) Modell nach Sprache wählen
+        model = utils.ChooseModel(lang)
+
+        # 4) Prompt anpassen
+        user_message = utils.CraftPrompt(user_message, lang, req)
+
+
         # Get or create conversation
         conversation_id = data.get('conversation_id')
         conversation = (ConversationService.get_conversation(conversation_id, current_user.id) 
@@ -318,6 +341,20 @@ def get_models():
     Returns:
         JSON: List of available models
     """
+
+    # eigenes Modell zurückgeben
+    return jsonify([
+        {
+            "id": "Experiment Feedback",
+            "object": "model",
+            "name": "Experiment Feedback Agent",
+            "type": "chat",
+            "input": ["text"]
+        }
+    ])
+
+
+
     # Check if models are cached in session
     if 'models' in session:
         return jsonify(session['models'])

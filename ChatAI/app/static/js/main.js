@@ -345,9 +345,22 @@ function handleChatSubmit(event) {
         body: JSON.stringify(params),
         signal: currentAbortController.signal
     })
-    .then(response => {
+    //.then(response => {
+    .then(async response => {
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            let errorMessage = `HTTP error! status: ${response.status}`;
+
+            try {
+                const text = await response.text();
+                const data = JSON.parse(text);
+                if (data?.message) {
+                    errorMessage = data.message;
+                }
+            } catch (e) {
+                // Falls Response kein JSON ist (z.B. Proxy, 502, etc.)
+            }
+
+            throw new Error(errorMessage);
         }
         
         // Check for new conversation ID

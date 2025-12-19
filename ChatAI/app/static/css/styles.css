@@ -217,3 +217,8 @@ pre {
 }
 
 
+/* Hide Settings Buttons (Desktop + Mobile) */
+button[data-bs-target="#settingsCollapse"],
+button[data-bs-target="#settingsCollapseMobile"] {
+    display: none !important;
+}

@@ -1,5 +1,8 @@
 jo, hier paar kurze Infos zum Starten...
 
+erstmal natürlich Docker Anwendung starten
+von github pullen, damit auf neuestem Stand
+
 falls nicht alle Erweiterungen runtergeladen sind
 alles auf einaml mit pip install requirements.txt oder so
 

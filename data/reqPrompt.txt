@@ -1,0 +1,8 @@
+Look at the following text and give back:
+"1" if this is a experimental design
+"2" if this is a specific question about a experimental design
+"0" if this has nothing to do with experimental design
+it's enough if you are 80% sure.
+Your response can only be 0, 1 or 2.
+
+Here the text:

@@ -276,13 +276,29 @@ def chat_stream():
             """Generator function for streaming response"""
             assistant_reply = ""
             try:
-                # Stream chat completion
+                # Detect language from user message
+                from app.utils.logic_methods import DetectLanguage, GetArcanaForLanguage
+                detected_language = DetectLanguage(user_message)
+                
+                # Check if Arcana/RAG is enabled
+                use_arcana = current_app.config.get('ENABLE_ARCANA', False)
+                
+                # Get appropriate arcana based on language detection
+                if use_arcana:
+                    arcana_id, arcana_base_url = GetArcanaForLanguage(detected_language)
+                    logger.info(f"Detected language: {detected_language}, Using Arcana ID: {arcana_id}")
+                else:
+                    arcana_id = None
+                
+                # Stream chat completion with optional Arcana support
                 for content in ChatService.stream_chat_completion(
                     client=client,
                     messages=messages,
                     model=model,
                     temperature=temperature,
-                    max_tokens=max_tokens
+                    max_tokens=max_tokens,
+                    use_arcana=use_arcana,
+                    arcana_id=arcana_id
                 ):
                     assistant_reply += content
                     yield content

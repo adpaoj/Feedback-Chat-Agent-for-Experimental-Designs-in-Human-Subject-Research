@@ -1,4 +1,5 @@
 from langdetect import detect
+from flask import current_app
 
 def DetectLanguage(user_text: str) -> int:
     
@@ -14,6 +15,34 @@ def DetectLanguage(user_text: str) -> int:
             return -1
     except:
         return -1
+
+
+def GetArcanaForLanguage(language: int) -> tuple:
+    """
+    Get the appropriate Arcana ID based on detected language.
+    
+    Args:
+        language (int): Language code (0 for German, 1 for English, -1 for unknown)
+    
+    Returns:
+        tuple: (arcana_id, base_url) for the selected language
+    """
+    arcanas = current_app.config.get('ARCANAS', {})
+    
+    if language == 0:
+        # German Arcana
+        arcana_config = arcanas.get('primary', {})
+    elif language == 1:
+        # English Arcana
+        arcana_config = arcanas.get('secondary', {})
+    else:
+        # Fallback to primary
+        arcana_config = arcanas.get('primary', {})
+    
+    return (
+        arcana_config.get('id'),
+        arcana_config.get('base_url')
+    )
 
 
 def ChooseModel (languag: int) -> str:

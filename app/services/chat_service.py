@@ -256,9 +256,12 @@ class ChatService:
         return messages
 
     @staticmethod
-    def stream_chat_completion(client, messages, model, temperature=0.5, max_tokens=1500, **kwargs):
+    def stream_chat_completion(client, messages, model, temperature=0.5, max_tokens=1500, 
+                              use_arcana=False, arcana_id=None, **kwargs):
         """
         Stream chat completion from the API with error handling
+        
+        Supports both standard OpenAI-compatible API and RAG/Arcana-enhanced responses
         
         Args:
             client: OpenAI client instance
@@ -266,6 +269,8 @@ class ChatService:
             model (str): Model name
             temperature (float): Sampling temperature
             max_tokens (int): Maximum tokens for response
+            use_arcana (bool): Whether to enable RAG/Arcana for enhanced accuracy
+            arcana_id (str, optional): Arcana ID for RAG context
             **kwargs: Additional parameters for the API
             
         Yields:
@@ -283,30 +288,65 @@ class ChatService:
                 "stream": True,
             }
             
+            # Add RAG/Arcana support for enhanced accuracy
+            if use_arcana and arcana_id:
+                payload["enable-tools"] = True
+                payload["arcana"] = {
+                    "id": arcana_id
+                }
+                logger.info(f"Using Arcana RAG with ID: {arcana_id}")
+            
             # Add any additional parameters
             payload.update(kwargs)
             
-            response = client.chat.completions.create(**payload)
+            # Use raw HTTP request for full control over parameters and headers
+            api_key = current_app.config.get('API_KEY')
+            base_url = current_app.config.get('SAIA_BASE_URL', "https://chat-ai.academiccloud.de/v1")
             
-            for chunk in response:
-                if chunk.choices and len(chunk.choices) > 0:
-                    delta = chunk.choices[0].delta
-                    content = getattr(delta, 'content', '')
-                    if content:
-                        yield content
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "inference-service": "saia-openai-gateway"
+            }
+            
+            response = requests.post(
+                f"{base_url}/chat/completions",
+                json=payload,
+                headers=headers,
+                stream=True,
+                timeout=600
+            )
+            
+            response.raise_for_status()
+            
+            for line in response.iter_lines():
+                if line:
+                    line = line.decode('utf-8')
+                    if line.startswith('data: '):
+                        data_str = line[6:]
+                        if data_str == '[DONE]':
+                            break
+                        try:
+                            data = json.loads(data_str)
+                            if 'choices' in data and len(data['choices']) > 0:
+                                choice = data['choices'][0]
+                                if 'delta' in choice and 'content' in choice['delta']:
+                                    content = choice['delta']['content']
+                                    if content:
+                                        yield content
+                        except json.JSONDecodeError:
+                            continue
                         
-        except APITimeoutError as e:
-            logger.error(f"API timeout: {e}")
+        except requests.exceptions.Timeout:
+            logger.error("API timeout")
             raise ModelAPIError("Request timeout: The model is taking too long to respond")
-        except RateLimitError as e:
-            logger.error(f"Rate limit exceeded: {e}")
-            raise ModelAPIError("Rate limit exceeded: Please try again in a moment")
-        except APIConnectionError as e:
+        except requests.exceptions.HTTPError as e:
+            logger.error(f"API HTTP error: {e}")
+            raise ModelAPIError(f"API error: {str(e)}")
+        except requests.exceptions.ConnectionError as e:
             logger.error(f"API connection error: {e}")
             raise ModelAPIError("Connection error: Cannot reach the API server")
-        except APIError as e:
-            logger.error(f"API error: {e}")
-            raise ModelAPIError(f"API error: {str(e)}")
         except Exception as e:
             logger.error(f"Unexpected error during streaming: {e}")
             raise ModelAPIError(f"Unexpected error: {str(e)}")

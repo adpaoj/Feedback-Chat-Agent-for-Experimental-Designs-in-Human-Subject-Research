@@ -53,7 +53,7 @@ def ChooseModel (languag: int) -> str:
 
     if languag == 0:
         # bestes deutsches Modell
-        return "VAGOsolutions/Llama-3.1-SauerkrautLM-70b-Instruct"
+        return "Llama-3.1-SauerkrautLM-70b-Instruct"
     else:
         # bestes englisches Modell
         return "google/gemma-3-27b-it"

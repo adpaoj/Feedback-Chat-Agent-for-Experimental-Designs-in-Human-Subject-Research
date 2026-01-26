@@ -56,7 +56,7 @@ def ChooseModel (languag: int) -> str:
         return "llama-3.1-sauerkrautlm-70b-instruct"
     else:
         # bestes englisches Modell
-        return "gemma-3-27b-it"
+        return "meta-llama-3.1-8b-instruct"
 
 
 def CraftPrompt(user_text: str, language: int, req: int) -> str:

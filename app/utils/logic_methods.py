@@ -53,10 +53,10 @@ def ChooseModel (languag: int) -> str:
 
     if languag == 0:
         # bestes deutsches Modell
-        return "llama-3.1-sauerkrautlm-70b-instruct"
+        return "google/gemma-3-27b-it"
     else:
         # bestes englisches Modell
-        return "meta-llama-3.1-8b-instruct"
+        return "google/gemma-3-27b-it"
 
 
 def CraftPrompt(user_text: str, language: int, req: int) -> str:
@@ -68,15 +68,15 @@ def CraftPrompt(user_text: str, language: int, req: int) -> str:
     if language == 0:
         # deutschen prompt bauen
         if req == 1:
-            final_prompt = open("data/dePrompt.txt", encoding="utf-8").read() + user_text
+            final_prompt = open("data/dePrompt-Evaluate.txt", encoding="utf-8").read() + user_text
         else:
-            final_prompt = user_text
+            final_prompt = open("data/dePrompt.txt", encoding="utf-8").read() + user_text
     else:
         # englischen prompt bauen
         if req == 1:
-            final_prompt = open("data/enPrompt.txt", encoding="utf-8").read() + user_text
+            final_prompt = open("data/enPrompt-Evaluate.txt", encoding="utf-8").read() + user_text
         else:
-            final_prompt = user_text
+            final_prompt = open("data/enPrompt.txt", encoding="utf-8").read() + user_text
 
     return final_prompt
 

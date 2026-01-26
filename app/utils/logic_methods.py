@@ -53,10 +53,10 @@ def ChooseModel (languag: int) -> str:
 
     if languag == 0:
         # bestes deutsches Modell
-        return "Llama-3.1-SauerkrautLM-70b-Instruct"
+        return "llama-3.1-sauerkrautlm-70b-instruct"
     else:
         # bestes englisches Modell
-        return "google/gemma-3-27b-it"
+        return "gemma-3-27b-it"
 
 
 def CraftPrompt(user_text: str, language: int, req: int) -> str:

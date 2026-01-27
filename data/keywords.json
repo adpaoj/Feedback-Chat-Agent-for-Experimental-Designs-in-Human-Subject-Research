@@ -1,0 +1,53 @@
+{
+  "de": {
+    "rate": [
+      "bewerte", "bewertung", "beurteilung", "bewerten", "rated",
+      "feedback", "meinung", "einschätzung", "einschätzen",
+      "wie findest du", "was hältst du", "was hälst du",
+      "evaluation", "evaluiere", "wie ist deine meinung",
+      "deine meinung", "dein feedback", "kritik", "rezension",
+      "wie würdest du", "wie würde ich", "was ist deine ansicht",
+      "wie bewertest du", "wie würdest du das bewerten",
+      "stellungnahme", "wertung"
+    ],
+    "specific": [
+      "erkläre", "erklär", "beschreibe", "beschreib", "was ist",
+      "wie funktioniert", "wie funktioniert's", "wie funktioniert das",
+      "nennen sie", "nenne mir", "liste auf", "aufzählung",
+      "information über", "informationen über", "details zu",
+      "erzähl mir", "sag mir", "zeig mir", "gib mir",
+      "erläutere", "erläuter", "verdeutliche", "verdeutlich",
+      "klär mich auf", "erkundige", "was bedeutet",
+      "erklären sie", "wie ist das", "wie läuft das",
+      "beschreibung", "definition", "was heißt"
+    ],
+    "follow-up": [
+      "warum", "wieso", "wieso ist", "wieso nicht", "wie kommst du darauf",
+      "woher weißt du", "auf welcher basis", "begründe", "erkläre das",
+      "wieso denkst du", "wie ist das möglich", "aber warum", "und warum",
+      "wo ist der grund", "welcher grund", "welche begründung"
+    ]
+  },
+  "en": {
+    "rate": [
+      "evaluate", "evaluation", "assess", "assessment", "rate", "rating",
+      "feedback", "opinion", "opinion on", "what do you think",
+      "how do you feel", "your thoughts", "critique", "review",
+      "what's your opinion", "do you think", "what do you think about",
+      "how would you rate", "what's your take", "your take on"
+    ],
+    "specific": [
+      "explain", "describe", "what is", "how does", "how do",
+      "what are", "list", "tell me", "give me", "provide",
+      "information about", "details about", "details on", "about",
+      "clarify", "elaborate", "expand on", "go into", "walk me through",
+      "how does it work", "what does it mean"
+    ],
+    "follow-up": [
+      "why", "why is", "why not", "how do you know", "on what basis",
+      "justify", "explain that", "why do you think", "how is that possible",
+      "but why", "and why", "what's the reason", "which reason",
+      "what reasoning", "what justification", "why would"
+    ]
+  }
+}

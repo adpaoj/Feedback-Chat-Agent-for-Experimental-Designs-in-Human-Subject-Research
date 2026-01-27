@@ -195,6 +195,7 @@ def chat_stream():
         user_message = data.get('message', '').strip()
         model = data.get('model', 'meta-llama-3.1-8b-instruct')
         base64_image = data.get('base64_image', None)
+        conversation_id = data.get('conversation_id')
         
         # Validate required fields
         if not user_message and not base64_image:
@@ -203,13 +204,13 @@ def chat_stream():
 
         # || Eigene Backend Logik ;) ||
 
-        # 1) Art der Anfrage bestimmen
-        req = utils.DetectDiffTopic(user_message)
-
-        # 2) Sprache erkennen
+        # 1) Language recognition (must be first to pass to DetectDiffTopic)
         lang = utils.DetectLanguage(user_message)
 
-        # 3) Fehlerausgaben
+        # 2) Type of request (with context)
+        req = utils.DetectDiffTopic(user_message, language=lang, conversation_id=conversation_id)
+
+        # 3) Errorhandling
         if lang == -1 and req == 0:
             return jsonify({'error': True, 'message': 'Bitte nur zum richtigen Thema in Deutsch oder Englisch schreiben.'}), 400
         elif lang == -1:
@@ -217,14 +218,13 @@ def chat_stream():
         elif req == 0:
             return jsonify({'error': True, 'message': 'Bitte nur zum richtigen Thema fragen.'}), 400
         
-        # 3) Modell nach Sprache wählen
+        # 3) Choose model based on language
         model = utils.ChooseModel(lang)
 
-        # 4) Prompt anpassen
+        # 4) Prompt making
         user_message = utils.CraftPrompt(user_message, lang, req)
 
         # Get or create conversation
-        conversation_id = data.get('conversation_id')
         conversation = (ConversationService.get_conversation(conversation_id, current_user.id) 
                        if conversation_id else None)
         

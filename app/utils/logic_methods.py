@@ -1,3 +1,5 @@
+import json
+from pathlib import Path
 from langdetect import detect
 from flask import current_app
 
@@ -80,37 +82,69 @@ def CraftPrompt(user_text: str, language: int, req: int) -> str:
 
     return final_prompt
 
-def DetectDiffTopic (user_text: str) -> int:
+def DetectDiffTopic(user_text: str, language: int = 0, conversation_id: int = None) -> int:
+    """
+    Detect topic type with conversation context awareness.
+    Uses existing conversation history from database to understand follow-up questions.
     
-    # 0 falsches Theme, 1 Bewertung Anfrage, 2 Spezifische Anfrage
-
+    Args:
+        user_text (str): The user input text
+        language (int): 0 for German, 1 for English
+        conversation_id (int): Optional conversation ID to get context from history
+    
+    Returns:
+        int: 0 = wrong topic, 1 = evaluation request, 2 = specific request
+    """
     if not user_text or not user_text.strip():
         return 0
     
     text = user_text.lower()
-
-    # vielleicht .txt anlegen mit mehr wörtern 
-    rate_keywords = ["bewerte", "bewertung", "feedback", "meinung", "einschätzung",
-        "wie findest du", "was hältst du", "evaluation"]
+    lang_key = "en" if language == 1 else "de"
     
-    specific_keywords = ["erkläre", "beschreibe", "was ist", "wie funktioniert",
-        "nennen sie", "liste auf", "information über", "details zu"]
+    # Load keywords from config file
+    config_path = Path("data/keywords.json")
+    try:
+        with open(config_path, encoding="utf-8") as f:
+            keywords_config = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return 0
     
-    # prüft was für eine art anfrage es ist
+    lang_keywords = keywords_config.get(lang_key, {})
+    rate_keywords = lang_keywords.get("rate", [])
+    specific_keywords = lang_keywords.get("specific", [])
+    follow_up_keywords = lang_keywords.get("follow-up", [])
+    
+    # Check for follow-up questions first - use conversation context
+    if any(k in text for k in follow_up_keywords) and conversation_id:
+        try:
+            from app.services.conversation_service import ConversationService
+            from flask_login import current_user
+            
+            # Get messages from conversation history
+            messages = ConversationService.get_messages(conversation_id, current_user.id)
+            
+            if messages and len(messages) > 1:
+                # Find the last user message (excluding current one)
+                for msg in reversed(messages[:-1]):
+                    if msg.role == 'user':
+                        # Detect the topic of the last user message
+                        last_user_text = msg.content.lower()
+                        
+                        if any(k in last_user_text for k in rate_keywords):
+                            return 1
+                        elif any(k in last_user_text for k in specific_keywords):
+                            return 2
+                        break
+        except Exception as e:
+            # Log but don't fail - fall back to regular detection
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.debug(f"Could not get conversation context: {e}")
+    
+    # Regular topic detection
     if any(k in text for k in rate_keywords):
-        final_prompt = open("data/reqPrompt.txt", encoding="utf-8").read() + user_text
         return 1
     elif any(k in text for k in specific_keywords):
-        final_prompt = open("data/reqPrompt.txt", encoding="utf-8").read() + user_text
         return 2
     else:
         return 0
-    
-    
-    # Für was waren die unteren Kommentare nochmal?
-
-    # testen ob reqPrompt funktioniert ...
-    # final Prompt an API schicken
-    # dafür hier AI einrichten
-    # (wie in github im Branch main)
-    # ai output zu int -> return

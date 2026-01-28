@@ -291,6 +291,11 @@ def chat_stream():
                     arcana_id = None
                 
                 # Stream chat completion with optional Arcana support
+                buffer = ""
+                already_sent = 0
+                stopped_for_references = False
+
+                # Stream chat completion with optional Arcana support
                 for content in ChatService.stream_chat_completion(
                     client=client,
                     messages=messages,
@@ -300,8 +305,32 @@ def chat_stream():
                     use_arcana=use_arcana,
                     arcana_id=arcana_id
                 ):
-                    assistant_reply += content
-                    yield content
+                                        # Append incoming chunk to buffer and inspect for a References: section
+                    buffer += content
+                    lower_buffer = buffer.lower()
+                    ref_idx = lower_buffer.find('references:')
+
+                    if ref_idx != -1:
+                        # Yield only the part before "References:" and stop streaming further
+                        to_yield = buffer[already_sent:ref_idx]
+                        if to_yield:
+                            assistant_reply += to_yield
+                            yield to_yield
+                        stopped_for_references = True
+                        logger.info("Streaming stopped: 'References:' section suppressed for client display.")
+                        break
+
+                    # No references marker found yet — yield newly received content
+                    to_yield = buffer[already_sent:]
+                    if to_yield:
+                        assistant_reply += to_yield
+                        yield to_yield
+                        already_sent += len(to_yield)
+
+                    # Trim buffer if it grows too large to avoid memory issues
+                    if len(buffer) > 10000:
+                        buffer = buffer[already_sent:]
+                        already_sent = len(buffer)
 
             except ModelAPIError as e:
                 # Handle API errors gracefully

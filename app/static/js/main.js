@@ -276,7 +276,7 @@ function startNewConversation() {
     chatWindow.innerHTML = `
         <div class="text-center text-muted mt-5">
             <i class="bi bi-chat-square-text display-1"></i>
-            <p class="mt-3 lead">Start a new conversation.</p>
+            <p class="mt-3 lead">Write "Evaluate: [copy your experiment design]" to get started. Then you can ask specific questions.</p>
         </div>
     `;
     

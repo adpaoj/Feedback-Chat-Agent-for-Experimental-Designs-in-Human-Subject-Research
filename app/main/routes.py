@@ -202,7 +202,10 @@ def chat_stream():
             return jsonify({'error': 'Message or image is required'}), 400
 
 
-        # || Eigene Backend Logik ;) ||
+        """
+        Here the logic methods for language detection and request type detection are used.
+            these methods are defined in app/utils/logic_methods.py
+        """
 
         # 1) Language recognition (must be first to pass to DetectDiffTopic)
         lang = utils.DetectLanguage(user_message)
@@ -388,7 +391,7 @@ def get_models():
         JSON: List of available models
     """
 
-    # eigenes Modell zurückgeben
+    # Return our experiment feedback model
     return jsonify([
         {
             "id": "Experiment Feedback",
@@ -398,29 +401,6 @@ def get_models():
             "input": ["text"]
         }
     ])
-
-
-
-    # Check if models are cached in session
-    if 'models' in session:
-        return jsonify(session['models'])
-
-    try:
-        models = ChatService.get_models()
-        session['models'] = models
-        return jsonify(models)
-    except ModelAPIError as e:
-        logger.error(f"Error fetching models: {e}")
-        return jsonify({
-            "error": str(e),
-            "message": "Failed to load models"
-        }), 503
-    except Exception as e:
-        logger.exception(f"Unexpected error fetching models: {e}")
-        return jsonify({
-            "error": "Unexpected error occurred",
-            "message": "Failed to load models"
-        }), 500
 
 
 @bp.route('/update_settings', methods=['POST'])

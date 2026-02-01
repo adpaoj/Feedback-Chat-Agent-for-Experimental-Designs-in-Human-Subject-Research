@@ -1,6 +1,6 @@
-# ChatAI - AI-Powered Chat Application
+# EDAI - Experiment Design AI
 
-A Flask-based web application for AI-powered chat interactions with support for multiple models, conversation management, and advanced features. Containerized with Docker and using PostgreSQL for data persistence.
+A Flask-based web application for AI-powered chat interactions for feedback for scientific experiment design, with conversation management and login system. Applying a RAG to specialize on experiment design evaluation. Containerized with Docker and using PostgreSQL for data persistence.
 
 <div align="center">
   <img src="repo_assets/empty_interface.png" alt="ChatAI Empty Interface" width="800"/>
@@ -8,30 +8,22 @@ A Flask-based web application for AI-powered chat interactions with support for 
 </div>
 
 <div align="center">
-  <img src="repo_assets/interface_with_message.png" alt="ChatAI Conversation" width="800"/>
-  <p><em>Rich markdown support and code highlighting</em></p>
-</div>
-
-<div align="center">
-  <img src="repo_assets/interface_models_list.png" alt="Model Selection" width="800"/>
-  <p><em>Extensive model selection with search capabilities</em></p>
+  <img src="repo_assets/login_system.png" alt="Model Selection" width="800"/>
+  <p><em>Login System with registration token</em></p>
 </div>
 
 ## 🌟 Features
 
 ### Core Functionality
-- **Multi-Model Support**: Interact with various AI models including Llama and GPT variants
 - **Real-Time Streaming**: Get responses as they're generated for a smooth experience
 - **Conversation Management**: Save, load, and delete conversation history
 - **User Authentication**: Secure login and registration with session management
-- **Image Support**: Upload and analyze images with vision-capable models
+- **RAG Technology**: Specific knowledge and evaluated example designs on exeriment designs
 
 ### Advanced Features
-- **System Instructions**: Define custom AI personas and behaviors
 - **Stop Generation**: Interrupt ongoing responses at any time
 - **Edit Messages**: Modify your previous messages and regenerate responses
 - **Regenerate Responses**: Re-run the last message to get a different answer
-- **Context Window Management**: Automatic token limit handling for long conversations
 - **Mobile Responsive**: Optimized interface for mobile and desktop devices
 
 ### Technical Features
@@ -46,7 +38,6 @@ A Flask-based web application for AI-powered chat interactions with support for 
 ## 📋 Prerequisites
 
 - Docker and Docker Compose
-- API access to AI models (e.g., SAIA, OpenAI)
 - Basic knowledge of environment variables
 
 ---
@@ -60,7 +51,7 @@ cd ChatAI
 ```
 
 ### 2. Configure Environment
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory (see `.env.example`):
 
 ```env
 # API Configuration
@@ -114,7 +105,8 @@ ChatAI/
 │   │   └── conversation_service.py  # Database operations service
 │   ├── utils/                   # Utility modules
 │   │   ├── __init__.py
-│   │   └── capabilities.py      # Model capability checker
+│   │   ├── capabilities.py      # Model capability checker
+|   |   └── logic_methods.py     # Language and topic detection and prompt building
 │   ├── static/                  # Static assets
 │   │   ├── css/
 │   │   │   └── styles.css
@@ -193,8 +185,6 @@ docker compose exec -T db psql -U chatai_user chatai_db < backup.sql
 | `FLASK_ENV` | Flask environment (development/production) | `development` |
 | `REGISTRATION_TOKEN` | Token required for user registration | *Optional* |
 
-### Model Configuration
-Available models are fetched dynamically from the API. To add or modify models, update the API endpoint or the `static/assets/models.json` file.
 
 ---
 
@@ -207,18 +197,12 @@ Available models are fetched dynamically from the API. To add or modify models, 
 4. Log in with your credentials
 
 ### Starting a Conversation
-1. Select a model from the dropdown in the sidebar
-2. Type your message in the input box at the bottom
+1. Start by writing "Evaluate" in the input box at the bottom
+2. Copy and paste your experiment design
 3. Press Enter or click the send button
 4. Watch as the AI responds in real-time
 
 ### Using Advanced Features
-
-#### System Instructions
-1. Open the Settings panel in the sidebar
-2. Enter custom instructions (e.g., "You are a Python expert")
-3. Click "Save as Default" to persist settings
-4. All new conversations will use these instructions
 
 #### Stop Generation
 - Click the red stop button that appears during response generation
@@ -332,15 +316,7 @@ docker compose logs web | grep "GET /static"
 
 ## 📊 Performance Optimization
 
-### Token Limit Management
-The application automatically manages context windows:
-- Estimates token usage for messages
-- Implements sliding window for long conversations
-- Reserves space for model responses
-- Logs token usage for monitoring
-
 ### Caching
-- Model list cached in session
 - Static assets cached by browser
 - Database query optimization with SQLAlchemy
 
@@ -386,21 +362,9 @@ pytest --cov=app tests/
 
 ---
 
-## 🤝 Contributing
-
-This is an internal project. For contributions or suggestions:
-1. Contact the project administrator
-2. Follow the existing code structure and patterns
-3. Add comprehensive error handling
-4. Document new features in code and README
-5. Test thoroughly before deployment
-
----
-
 ## 📜 License
 
-© 2025 ChatAI. All rights reserved.  
-This project is for internal use only and is not distributed externally.
+© 2026 EDAI - MIT License (Please refer to `LICENSE` File)
 
 ---
 
@@ -411,33 +375,12 @@ For access, technical issues, or questions:
 - **Documentation**: Refer to this README and inline code comments
 - **Issues**: Check application logs for detailed error messages
 
----
-
-## 🔄 Version History
-
-### v2.0.0 (Current)
-- ✨ Added stop generation functionality
-- ✨ Added message editing capability
-- ✨ Added response regeneration
-- ✨ Implemented system instructions
-- ✨ Added context window management
-- 🐛 Fixed double sidebar issue
-- 🔧 Improved mobile responsiveness
-- 🔧 Refactored service layer
-- 🔧 Enhanced error handling
-- 📝 Comprehensive code documentation
-
-### v1.0.0
-- Initial release
-- Basic chat functionality
-- User authentication
-- Conversation management
-- Docker containerization
 
 ---
 
 ## 🙏 Acknowledgments
 
+- Application is a modified version of ChatAI by Konstantin Soballa
 - Bootstrap 5 for UI framework
 - Flask and its extensions for backend
 - OpenAI API format for model integration
@@ -446,8 +389,6 @@ For access, technical issues, or questions:
 
 ---
 
-**Built with ❤️ for efficient AI-powered conversations**
+## ✍️ Authors
 
-## ✍️ Author
-
-**Konstantin Soballa**
+**Bjarne J. Wolff, Felix Rumscheid, Adrian, Batuhan Kaya and Fernando**

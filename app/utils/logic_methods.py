@@ -5,7 +5,7 @@ from flask import current_app
 
 def DetectLanguage(user_text: str) -> int:
     
-    # 0 für Deutsch, 1 für Englisch, sonst Fehler
+    # return 0 if language = Deutsch, 1 if language = Englisch, else -1 = error
 
     try:
         lang = detect(user_text)
@@ -49,32 +49,28 @@ def GetArcanaForLanguage(language: int) -> tuple:
 
 def ChooseModel (languag: int) -> str:
 
-    # je nach Sprache bestes Model zurückgeben
-
-    # noch die entsprechenden besten Modelle auswählen !!!!!!!!!
+    # return the best model depending on language
 
     if languag == 0:
-        # bestes deutsches Modell
+        # best german Modell
         return "llama-3.1-sauerkrautlm-70b-instruct"
     else:
-        # bestes englisches Modell
+        # best englisch Modell
         return "meta-llama-3.1-8b-instruct"
 
 
 def CraftPrompt(user_text: str, language: int, req: int) -> str:
     
-    # je nach Sprache besten Prompt zurückgeben
-    # für req = 1 Bewertungsprompts, sonst nix
-    # evtl für 2/else noch anderen Prompt für bessere Antwort?
+    # build the final prompt depending on language and request type
 
     if language == 0:
-        # deutschen prompt bauen
+        # build german prompt
         if req == 1:
             final_prompt = open("data/dePrompt-Evaluate.txt", encoding="utf-8").read() + user_text
         else:
             final_prompt = open("data/dePrompt.txt", encoding="utf-8").read() + user_text
     else:
-        # englischen prompt bauen
+        # build englisch prompt
         if req == 1:
             final_prompt = open("data/enPrompt-Evaluate.txt", encoding="utf-8").read() + user_text
         else:
